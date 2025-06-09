@@ -19,6 +19,7 @@
       }
     ],
     "paths": {
+      "@reducer/*": ["./src/app/_private/reducer/*"],
       "@context/*": ["./src/app/_private/context/*"],
       "@api-client/*": ["./src/app/_private/api/*"],
       "@helper/*": ["./src/app/_private/helper/*"],

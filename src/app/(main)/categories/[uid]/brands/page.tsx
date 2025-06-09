@@ -1,5 +1,6 @@
 import { Flex } from "antd";
 import React from "react";
+import CategoryBrandsPageBody from "./template/body/body";
 import CategoryBrandPageHeader from "./template/heder/header";
 
 interface CategoryBrandsPageProps {
@@ -11,6 +12,7 @@ const CategoryBrandsPage: React.FC<CategoryBrandsPageProps> = async ({ params }:
   return (
     <Flex vertical gap={10}>
       <CategoryBrandPageHeader />
+      <CategoryBrandsPageBody categoryUid={uid} />
     </Flex>
   );
 };

@@ -6,11 +6,11 @@ import DeleteButton from "@comp/button/delete/DeleteButton";
 import SmallImage from "@comp/image/small/SmallImage";
 import { getMessageApi } from "@context/message/MessageContext";
 import { BrandDto } from "@dto/brand/brand";
+import { initialTablePaginationState, tablePaginationReducer, TablePaginationState } from "@reducer/tablePagination/TablePaginationReducer";
 import { Popconfirm, Table, TableColumnsType, TablePaginationConfig } from "antd";
 import { SorterResult } from "antd/es/table/interface";
 import Link from "next/link";
 import { forwardRef, useCallback, useEffect, useImperativeHandle, useMemo, useReducer, useState } from "react";
-import { initialTablePaginationState, tablePaginationReducer, TablePaginationState } from "./reducer/TablePaginationState";
 
 interface BrandsDataTableProps {}
 
