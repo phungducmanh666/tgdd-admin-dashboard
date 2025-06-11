@@ -1,3 +1,3 @@
-export default type ProductVariantOptionMap = {
-    
-}
+export type ProductVariantOptionMap = {
+  uid: string;
+};

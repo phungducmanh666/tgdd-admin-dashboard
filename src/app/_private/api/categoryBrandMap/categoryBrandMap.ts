@@ -8,7 +8,7 @@ import ApiClient from "../api-client";
 
 export default class CategoryBrandMapApi {
   static GenerateLinkFindAll(categoryUid: string, isBelong: boolean, findAllParams?: FindAllPaginationProps): string {
-    let requestParams = new URLSearchParams({
+    const requestParams = new URLSearchParams({
       isBelong: String(isBelong),
     });
     if (findAllParams) {
@@ -50,7 +50,7 @@ export default class CategoryBrandMapApi {
     if (response.ok) {
       const { metadata } = (await response.json()) as ApiSuccessResponse<FindAllDto<BrandDto>>;
       const { data, pagination } = metadata!;
-      let dataMapped = data.map((item) => CategoryMapper.map(item));
+      const dataMapped = data.map((item) => CategoryMapper.map(item));
       return { data: dataMapped, pagination };
     } else {
       const { error } = (await response.json()) as ApiFailedResponse;

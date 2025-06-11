@@ -1,33 +1,27 @@
 "use client";
 
-import ProductLineApi from "@api-client/productLine/productLine";
+import AttributeGroupApi from "@api-client/attributeGroup/attributeGroup";
 import AddButton from "@comp/button/add/AddButton";
 import RefreshButton from "@comp/button/refresh/RefreshButton";
+import CategoriesSelect from "@comp/select/category/CategoriesSelect";
 import { getMessageApi } from "@context/message/MessageContext";
 import { Flex, Modal } from "antd";
 import React, { useRef, useState } from "react";
-import FormCreateProductLine from "./components/form/create/FormCreateProductLine";
-import CategoriesBrandsSelect from "./components/select/CategoriesBrandsSelect";
-import ProductLinesDataTable, { ProductLinesTableRef } from "./components/table/ProductLinesDataTable";
+import FormCreateAttributeGroup from "./components/form/create/FormCreate";
+import AttributeGroupsDataTable, { ProductLinesTableRef } from "./components/table/AttributeGroupsDataTable";
 
-interface ProductLinesPageBodyProps {}
+const ApiClient = AttributeGroupApi;
 
-type SelectedUidType = {
-  categoryUid: string | undefined;
-  brandUid: string | undefined;
-};
+interface AttributeGroupsPageBodyProps {
+  ""?: "";
+}
 
-const initialSelectedUid: SelectedUidType = {
-  categoryUid: undefined,
-  brandUid: undefined,
-};
-
-const ProductLinesPageBody: React.FC<ProductLinesPageBodyProps> = ({}) => {
+const AttributeGroupsPageBody: React.FC<AttributeGroupsPageBodyProps> = ({}) => {
   const [openModal, setOpenModal] = useState<boolean>(false);
-  const [selectedUid, setSelectedUid] = useState<SelectedUidType>(initialSelectedUid);
+  const [selectedUid, setSelectedUid] = useState<string | undefined>(undefined);
   const dataTableRef = useRef<ProductLinesTableRef>(null);
 
-  const handleCreate = async (categoryUid: string, brandUid: string, name: string) => {
+  const handleCreate = async (categoryUid: string, name: string) => {
     setOpenModal(false);
     const key = "createProductLine";
     getMessageApi().open({
@@ -37,7 +31,7 @@ const ProductLinesPageBody: React.FC<ProductLinesPageBodyProps> = ({}) => {
     });
 
     try {
-      await ProductLineApi.Insert(categoryUid, brandUid, name);
+      await ApiClient.Insert(categoryUid, name);
       getMessageApi().open({
         key,
         type: "success",
@@ -62,27 +56,27 @@ const ProductLinesPageBody: React.FC<ProductLinesPageBodyProps> = ({}) => {
     }
   };
 
-  const handleSelect = (categoryUid: string | undefined, brandUid: string | undefined) => {
-    setSelectedUid({ categoryUid, brandUid });
+  const handleSelect = (categoryUid: string | undefined) => {
+    setSelectedUid(categoryUid);
   };
 
   return (
     <>
       <Flex vertical gap={10}>
         <Flex gap={10} wrap>
-          <CategoriesBrandsSelect onChange={handleSelect} />
+          <CategoriesSelect onChange={handleSelect} />
         </Flex>
         <Flex gap={10}>
           <AddButton onClick={() => setOpenModal(true)} />
           <RefreshButton onClick={handleReload} />
         </Flex>
-        <ProductLinesDataTable ref={dataTableRef} {...selectedUid} />
+        <AttributeGroupsDataTable ref={dataTableRef} categoryUid={selectedUid} />
       </Flex>
       <Modal destroyOnHidden open={openModal} onCancel={() => setOpenModal(false)} footer={null}>
-        <FormCreateProductLine onSubmit={handleCreate} {...selectedUid} />
+        <FormCreateAttributeGroup onSubmit={handleCreate} categoryUid={selectedUid} />
       </Modal>
     </>
   );
 };
 
-export default ProductLinesPageBody;
+export default AttributeGroupsPageBody;

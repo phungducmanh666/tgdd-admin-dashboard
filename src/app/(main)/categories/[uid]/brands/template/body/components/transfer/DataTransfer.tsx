@@ -56,7 +56,7 @@ const DataTransfer = forwardRef<DataTransferRef, DataTransferProps>(({ categoryU
       });
       reload();
     } catch (error) {
-      let e = error as Error;
+      const e = error as Error;
       getMessageApi().open({
         key,
         type: "error",
@@ -83,7 +83,7 @@ const DataTransfer = forwardRef<DataTransferRef, DataTransferProps>(({ categoryU
       });
       reload();
     } catch (error) {
-      let e = error as Error;
+      const e = error as Error;
       getMessageApi().open({
         key,
         type: "error",

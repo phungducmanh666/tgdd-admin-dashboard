@@ -72,7 +72,7 @@ const ProductLinesDataTable = forwardRef<ProductLinesTableRef, ProductLinesDataT
         });
         run();
       } catch (error) {
-        let e = error as Error;
+        const e = error as Error;
         getMessageApi().open({
           key,
           type: "error",

@@ -9,7 +9,7 @@ export default class ProductLineApi {
   static UrlPrefix: string = "product-lines";
 
   static GenerateLinkFindAll(categoryUid: string | undefined, brandUid: string | undefined, findAllParams?: FindAllPaginationProps): string {
-    let requestParams = new URLSearchParams({});
+    const requestParams = new URLSearchParams({});
     if (categoryUid) {
       requestParams.append("categoryUid", String(categoryUid));
     }
@@ -67,7 +67,7 @@ export default class ProductLineApi {
     if (response.ok) {
       const { metadata } = (await response.json()) as ApiSuccessResponse<FindAllDto<ProductLineDto>>;
       const { data, pagination } = metadata!;
-      let dataMapped = data.map((item) => ProductLineMapper.map(item));
+      const dataMapped = data.map((item) => ProductLineMapper.map(item));
       return { data: dataMapped, pagination };
     } else {
       const { error } = (await response.json()) as ApiFailedResponse;

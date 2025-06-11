@@ -9,7 +9,7 @@ export default class CategoryApi {
   static UrlPrefix: string = "categories";
 
   static GenerateLinkFindAll(findAllParams?: FindAllPaginationProps): string {
-    let requestParams = new URLSearchParams({});
+    const requestParams = new URLSearchParams({});
     if (findAllParams) {
       const { currentPage, itemsPerPage, orderField, orderDirection } = findAllParams;
       requestParams.append("currentPage", String(currentPage));
@@ -55,7 +55,7 @@ export default class CategoryApi {
     if (response.ok) {
       const { metadata } = (await response.json()) as ApiSuccessResponse<FindAllDto<CategoryDto>>;
       const { data, pagination } = metadata!;
-      let dataMapped = data.map((item) => CategoryMapper.map(item));
+      const dataMapped = data.map((item) => CategoryMapper.map(item));
       return { data: dataMapped, pagination };
     } else {
       const { error } = (await response.json()) as ApiFailedResponse;

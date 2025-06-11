@@ -22,28 +22,33 @@ export default function MainLayout({ children }: MainLayoutProps) {
       { key: "1", label: "Home", onClick: () => router.push("/home") },
       {
         key: "2",
-        label: "Categories",
+        label: "Danh mục sản phẩm",
         onClick: () => router.push("/categories"),
       },
       { key: "3", label: "Brands", onClick: () => router.push("/brands") },
       {
         key: "4",
-        label: "Product lines",
+        label: "Dòng sản phẩm",
         onClick: () => router.push("/product-lines"),
       },
       {
+        key: "4.1",
+        label: "Nhóm thuộc tính",
+        onClick: () => router.push("/attribute-groups"),
+      },
+      {
         key: "5",
-        label: "Products",
+        label: "Mặt hàng",
         onClick: () => router.push("/products"),
       },
       {
         key: "6",
-        label: "Promitions",
+        label: "Khuyến mãi",
         onClick: () => router.push("/promotions"),
       },
       {
         key: "7",
-        label: "Orders",
+        label: "Đơn hàng",
         onClick: () => router.push("/orders"),
       },
       {
@@ -53,11 +58,11 @@ export default function MainLayout({ children }: MainLayoutProps) {
       },
       {
         key: "9",
-        label: "Accounts",
+        label: "Tài khoản",
         children: [
           {
             key: "9.1",
-            label: "Accounts",
+            label: "Tài khoản",
             onClick: () => router.push("/accounts"),
           },
           {
