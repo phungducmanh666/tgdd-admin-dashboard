@@ -1,11 +1,6 @@
-import { OrderDirection } from "@dto/common/common";
+import { FindAllPaginationProps } from "../../data/props/ApiProps";
 
-export interface TablePaginationState {
-  currentPage: number;
-  itemsPerPage: number;
-  orderField: string;
-  orderDirection: OrderDirection;
-}
+export interface TablePaginationState extends FindAllPaginationProps {}
 
 export type TablePaginationAction = { type: "CHANGE"; payload: TablePaginationState } | { type: "RELOAD" };
 

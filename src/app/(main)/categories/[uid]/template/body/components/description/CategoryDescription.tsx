@@ -21,6 +21,11 @@ const CategoryDescription: React.FC<CategoryDescriptionProps> = ({ category }: C
     },
     {
       key: "1",
+      label: "Ngày tạo",
+      children: <p>{String(category?.createAt)}</p>,
+    },
+    {
+      key: "1",
       label: "Hình ảnh",
       children: <SmallImage src={category?.photoUrl} />,
     },

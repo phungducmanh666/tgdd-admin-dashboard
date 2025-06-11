@@ -1,18 +1,24 @@
 import { CategoryDto } from "@dto/category/category";
-import { FindAllDto, OrderDirection } from "@dto/common/common";
+import { FindAllDto } from "@dto/common/common";
 import CategoryMapper from "@helper/mapper/category/CategoryMapper";
 import { ApiFailedResponse, ApiSuccessResponse } from "@helper/server/api/response/ApiResponse";
+import { FindAllPaginationProps } from "../../data/props/ApiProps";
 import ApiClient from "../api-client";
-
-type FindAllProps = {
-  currentPage: number;
-  itemsPerPage: number;
-  orderField: string;
-  orderDirection: OrderDirection;
-};
 
 export default class CategoryApi {
   static UrlPrefix: string = "categories";
+
+  static GenerateLinkFindAll(findAllParams?: FindAllPaginationProps): string {
+    let requestParams = new URLSearchParams({});
+    if (findAllParams) {
+      const { currentPage, itemsPerPage, orderField, orderDirection } = findAllParams;
+      requestParams.append("currentPage", String(currentPage));
+      requestParams.append("itemsPerPage", String(itemsPerPage));
+      requestParams.append("orderField", String(orderField));
+      requestParams.append("orderDirection", String(orderDirection));
+    }
+    return ApiClient.GetUrl(`/${CategoryApi.UrlPrefix}?${requestParams.toString()}`);
+  }
 
   static async Insert(name: string): Promise<CategoryDto> {
     const category = {
@@ -44,15 +50,8 @@ export default class CategoryApi {
       throw Error(error.message);
     }
   }
-  static async FindAll({ currentPage, itemsPerPage, orderField, orderDirection }: FindAllProps): Promise<FindAllDto<CategoryDto>> {
-    const params = new URLSearchParams({
-      currentPage: currentPage.toString(),
-      itemsPerPage: itemsPerPage.toString(),
-      orderField: orderField,
-      orderDirection: orderDirection.toString(),
-    });
-
-    const response = await fetch(ApiClient.GetUrl(`/${CategoryApi.UrlPrefix}?${params.toString()}`));
+  static async FindAll(findAllParams?: FindAllPaginationProps): Promise<FindAllDto<CategoryDto>> {
+    const response = await fetch(CategoryApi.GenerateLinkFindAll(findAllParams));
     if (response.ok) {
       const { metadata } = (await response.json()) as ApiSuccessResponse<FindAllDto<CategoryDto>>;
       const { data, pagination } = metadata!;

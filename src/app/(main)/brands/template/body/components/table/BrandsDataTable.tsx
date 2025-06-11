@@ -23,7 +23,7 @@ const urlPrefix: string = "brands";
 const BrandsDataTable = forwardRef<BrandsTableRef, BrandsDataTableProps>((props, ref) => {
   const [tablePagination, dispatchTablePagination] = useReducer(tablePaginationReducer, initialTablePaginationState);
   const [totalItems, setTotalItems] = useState<number>(0);
-  const { loading, data, error, run } = useBrands(tablePagination);
+  const { loading, data, error, run } = useBrands({ findAllPagination: tablePagination });
 
   useImperativeHandle(ref, () => ({
     reload: run,
@@ -78,6 +78,11 @@ const BrandsDataTable = forwardRef<BrandsTableRef, BrandsDataTableProps>((props,
         render: (photoUrl: string) => {
           return <SmallImage src={photoUrl} />;
         },
+      },
+      {
+        title: "create at",
+        dataIndex: "createAt",
+        sorter: true,
       },
       {
         title: "",

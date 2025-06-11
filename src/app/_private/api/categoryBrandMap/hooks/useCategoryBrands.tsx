@@ -1,22 +1,20 @@
+import { FindAllPaginationProps } from "@/app/_private/data/props/ApiProps";
 import useAsyncFunctionWrapper from "@/app/_private/hooks/useAsyncFunctionWrapper/useAsyncFunctionWrapper";
 import { CategoryDto } from "@dto/category/category";
-import { FindAllDto, OrderDirection } from "@dto/common/common";
+import { FindAllDto } from "@dto/common/common";
 import { useCallback } from "react";
 import CategoryBrandMapApi from "../categoryBrandMap";
 
-interface HookProps {
+export interface useCategoryBrandsProps {
   categoryUid: string;
   isBelong: boolean;
-  currentPage: number;
-  itemsPerPage: number;
-  orderField: string;
-  orderDirection: OrderDirection;
+  paginationParams?: FindAllPaginationProps;
 }
 
-export default function useCategoryBrands({ categoryUid, currentPage, isBelong, itemsPerPage, orderField, orderDirection }: HookProps) {
+export default function useCategoryBrands({ categoryUid, isBelong, paginationParams }: useCategoryBrandsProps) {
   const loadData = useCallback(() => {
-    return CategoryBrandMapApi.FindAllBrands(categoryUid, { isBelong, currentPage, itemsPerPage, orderField, orderDirection });
-  }, [currentPage, itemsPerPage, orderField, orderDirection]);
+    return CategoryBrandMapApi.FindAllBrands(categoryUid, isBelong, paginationParams);
+  }, [categoryUid, { ...paginationParams }]);
 
   return useAsyncFunctionWrapper<FindAllDto<CategoryDto>>({
     asyncFunction: loadData,

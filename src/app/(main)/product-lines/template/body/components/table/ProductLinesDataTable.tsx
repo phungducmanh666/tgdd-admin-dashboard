@@ -1,27 +1,53 @@
 "use client";
 
-import CategryApi from "@api-client/category/category";
-import useCategories from "@api-client/category/hooks/useCategories/useCategories";
+import useProductLines from "@api-client/productLine/hooks/useProductLines/useProductLines";
+import ProductLineApi from "@api-client/productLine/productLine";
 import DeleteButton from "@comp/button/delete/DeleteButton";
-import SmallImage from "@comp/image/small/SmallImage";
 import { getMessageApi } from "@context/message/MessageContext";
-import { CategoryDto } from "@dto/category/category";
+import { ProductLineDto } from "@dto/productLine/productLine";
 import { initialTablePaginationState, tablePaginationReducer, TablePaginationState } from "@reducer/tablePagination/TablePaginationReducer";
-import { Popconfirm, Table, TableColumnsType, TablePaginationConfig } from "antd";
+import { Flex, Popconfirm, Table, TableColumnsType, TablePaginationConfig } from "antd";
 import { SorterResult } from "antd/es/table/interface";
 import Link from "next/link";
 import { forwardRef, useCallback, useEffect, useImperativeHandle, useMemo, useReducer, useState } from "react";
 
-interface CategoriesDataTableProps {}
+interface ProductLinesDataTableProps {
+  categoryUid: string | undefined;
+  brandUid: string | undefined;
+}
 
-export interface CategoriesDataTableRef {
+export interface ProductLinesTableRef {
   reload: () => void;
 }
 
-const CategoriesTable = forwardRef<CategoriesDataTableRef, CategoriesDataTableProps>((props, ref) => {
+type SelectedUidType = {
+  categoryUid: string | undefined;
+  brandUid: string | undefined;
+};
+
+const initialSelectedUid: SelectedUidType = {
+  categoryUid: undefined,
+  brandUid: undefined,
+};
+
+const urlPrefix: string = "product-lines";
+
+const ProductLinesDataTable = forwardRef<ProductLinesTableRef, ProductLinesDataTableProps>(({ categoryUid, brandUid }, ref) => {
   const [tablePagination, dispatchTablePagination] = useReducer(tablePaginationReducer, initialTablePaginationState);
   const [totalItems, setTotalItems] = useState<number>(0);
-  const { loading, data, error, run } = useCategories({ findAllPagination: tablePagination });
+  const [selectedUid, setSelectedUid] = useState<SelectedUidType>({
+    categoryUid,
+    brandUid,
+  });
+  const { loading, data, error, run } = useProductLines({
+    categoryUid: selectedUid.categoryUid,
+    brandUid: selectedUid.brandUid,
+    findAllPagination: tablePagination,
+  });
+
+  useEffect(() => {
+    setSelectedUid({ categoryUid, brandUid });
+  }, [categoryUid, brandUid]);
 
   useImperativeHandle(ref, () => ({
     reload: run,
@@ -29,7 +55,7 @@ const CategoriesTable = forwardRef<CategoriesDataTableRef, CategoriesDataTablePr
 
   const handleDelete = useCallback(
     async (uid: string) => {
-      const key = `createCategory${uid}`;
+      const key = `deleteBrand${uid}`;
       getMessageApi().open({
         key,
         type: "loading",
@@ -37,7 +63,7 @@ const CategoriesTable = forwardRef<CategoriesDataTableRef, CategoriesDataTablePr
       });
 
       try {
-        await CategryApi.DeleteByUid(uid);
+        await ProductLineApi.DeleteByUid(uid);
         getMessageApi().open({
           key,
           type: "success",
@@ -58,7 +84,7 @@ const CategoriesTable = forwardRef<CategoriesDataTableRef, CategoriesDataTablePr
     [run]
   );
 
-  const columns: TableColumnsType<CategoryDto> = useMemo(
+  const columns: TableColumnsType<ProductLineDto> = useMemo(
     () => [
       {
         title: "uid",
@@ -68,14 +94,7 @@ const CategoriesTable = forwardRef<CategoriesDataTableRef, CategoriesDataTablePr
         title: "name",
         dataIndex: "name",
         sorter: true,
-        render: (_: unknown, { uid, name }: CategoryDto) => <Link href={`/categories/${uid}`}>{name}</Link>,
-      },
-      {
-        title: "photo",
-        dataIndex: "photoUrl",
-        render: (photoUrl: string) => {
-          return <SmallImage src={photoUrl} />;
-        },
+        render: (_: unknown, { uid, name }: ProductLineDto) => <Link href={`/${urlPrefix}/${uid}`}>{name}</Link>,
       },
       {
         title: "create at",
@@ -84,7 +103,7 @@ const CategoriesTable = forwardRef<CategoriesDataTableRef, CategoriesDataTablePr
       },
       {
         title: "",
-        render: ({ uid }: CategoryDto) => (
+        render: ({ uid }: ProductLineDto) => (
           <Popconfirm title="xóa?" onConfirm={() => handleDelete(uid)}>
             <DeleteButton />
           </Popconfirm>
@@ -94,7 +113,7 @@ const CategoriesTable = forwardRef<CategoriesDataTableRef, CategoriesDataTablePr
     [handleDelete]
   );
 
-  const handleChange = (pagination: TablePaginationConfig, filter: any, sorter: SorterResult<CategoryDto> | SorterResult<CategoryDto>[]) => {
+  const handleChange = (pagination: TablePaginationConfig, filter: any, sorter: SorterResult<ProductLineDto> | SorterResult<ProductLineDto>[]) => {
     const payload: TablePaginationState = {
       currentPage: pagination.current!,
       itemsPerPage: pagination.pageSize!,
@@ -102,7 +121,7 @@ const CategoriesTable = forwardRef<CategoriesDataTableRef, CategoriesDataTablePr
       orderDirection: tablePagination.orderDirection,
     };
     if (sorter) {
-      sorter = sorter as SorterResult<CategoryDto>;
+      sorter = sorter as SorterResult<ProductLineDto>;
       if (sorter.column) {
         payload.orderField = sorter.column.dataIndex as string;
       }
@@ -121,24 +140,26 @@ const CategoriesTable = forwardRef<CategoriesDataTableRef, CategoriesDataTablePr
 
   useEffect(() => {
     run();
-  }, [tablePagination]);
+  }, [tablePagination, selectedUid]);
 
   return (
-    <Table
-      loading={loading}
-      columns={columns}
-      dataSource={data?.data}
-      rowKey={"uid"}
-      onChange={handleChange}
-      pagination={{
-        current: tablePagination.currentPage,
-        defaultPageSize: tablePagination.itemsPerPage,
-        showSizeChanger: true,
-        pageSizeOptions: ["5", "10", "15", "20"],
-        total: totalItems,
-      }}
-    />
+    <Flex vertical gap={10}>
+      <Table
+        loading={loading}
+        columns={columns}
+        dataSource={data?.data}
+        rowKey={"uid"}
+        onChange={handleChange}
+        pagination={{
+          current: tablePagination.currentPage,
+          defaultPageSize: tablePagination.itemsPerPage,
+          showSizeChanger: true,
+          pageSizeOptions: ["5", "10", "15", "20"],
+          total: totalItems,
+        }}
+      />
+    </Flex>
   );
 });
 
-export default CategoriesTable;
+export default ProductLinesDataTable;

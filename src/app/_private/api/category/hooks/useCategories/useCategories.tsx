@@ -1,20 +1,18 @@
+import { FindAllPaginationProps } from "@/app/_private/data/props/ApiProps";
 import useAsyncFunctionWrapper from "@/app/_private/hooks/useAsyncFunctionWrapper/useAsyncFunctionWrapper";
 import { CategoryDto } from "@dto/category/category";
-import { FindAllDto, OrderDirection } from "@dto/common/common";
+import { FindAllDto } from "@dto/common/common";
 import { useCallback } from "react";
 import CategryApi from "../../category";
 
-interface useCategoriesProps {
-  currentPage: number;
-  itemsPerPage: number;
-  orderField: string;
-  orderDirection: OrderDirection;
+export interface useCategoriesProps {
+  findAllPagination?: FindAllPaginationProps;
 }
 
-export default function useCategories({ currentPage, itemsPerPage, orderField, orderDirection }: useCategoriesProps) {
+export default function useCategories({ findAllPagination }: useCategoriesProps) {
   const loadData = useCallback(() => {
-    return CategryApi.FindAll({ currentPage, itemsPerPage, orderField, orderDirection });
-  }, [currentPage, itemsPerPage, orderField, orderDirection]);
+    return CategryApi.FindAll(findAllPagination);
+  }, [{ ...findAllPagination }]);
 
   return useAsyncFunctionWrapper<FindAllDto<CategoryDto>>({
     asyncFunction: loadData,

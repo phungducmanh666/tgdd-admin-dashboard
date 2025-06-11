@@ -26,8 +26,8 @@ const DataTransfer = forwardRef<DataTransferRef, DataTransferProps>(({ categoryU
   const [tablePaginationRight, dispatchTablePaginationRight] = useReducer(tablePaginationReducer, initialTablePaginationState);
   const [totalItemsLeft, setTotalItemsLeft] = useState<number>(0);
   const [totalItemsRight, setTotalItemsRight] = useState<number>(0);
-  const brandsLeft = useCategoryBrands({ categoryUid, isBelong: true, ...tablePaginationLeft });
-  const brandsRight = useCategoryBrands({ categoryUid, isBelong: false, ...tablePaginationRight });
+  const brandsLeft = useCategoryBrands({ categoryUid, isBelong: true, paginationParams: { ...tablePaginationLeft } });
+  const brandsRight = useCategoryBrands({ categoryUid, isBelong: false, paginationParams: { ...tablePaginationRight } });
 
   const reload = () => {
     dispatchTablePaginationLeft({ type: "RELOAD" });
