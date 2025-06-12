@@ -1,29 +1,36 @@
 "use client";
 
-import BrandApi from "@api-client/brand/brand";
-import useBrands from "@api-client/brand/hooks/useBrands/useBrands";
+import AttributeApi from "@api-client/attribute/attribute";
+import useAttributes from "@api-client/attribute/hooks/useAttributes/useAttributes";
 import DeleteButton from "@comp/button/delete/DeleteButton";
-import SmallImage from "@comp/image/small/SmallImage";
+import EditButton from "@comp/button/edit/EditButton";
 import { getMessageApi } from "@context/message/MessageContext";
-import { BrandDto } from "@dto/brand/brand";
+import { AttributeDto } from "@dto/attribute/attribute";
 import { initialTablePaginationState, tablePaginationReducer, TablePaginationState } from "@reducer/tablePagination/TablePaginationReducer";
-import { Popconfirm, Table, TableColumnsType, TablePaginationConfig } from "antd";
+import { Flex, Popconfirm, Table, TableColumnsType, TablePaginationConfig } from "antd";
 import { SorterResult } from "antd/es/table/interface";
-import Link from "next/link";
 import { forwardRef, useCallback, useEffect, useImperativeHandle, useMemo, useReducer, useState } from "react";
 
-interface BrandsDataTableProps {}
+const ApiClient = AttributeApi;
 
-export interface BrandsTableRef {
+interface Dto extends AttributeDto {}
+
+interface AttributesDataTableProps {
+  attributeGroupUid: string;
+  onEdit: (uid: string) => void;
+}
+
+export interface AttributesTableRef {
   reload: () => void;
 }
 
-const urlPrefix: string = "brands";
+const urlPrefix: string = "attributes";
 
-const BrandsDataTable = forwardRef<BrandsTableRef, BrandsDataTableProps>((props, ref) => {
+const AttributesDataTable = forwardRef<AttributesTableRef, AttributesDataTableProps>(({ attributeGroupUid, onEdit }, ref) => {
   const [tablePagination, dispatchTablePagination] = useReducer(tablePaginationReducer, initialTablePaginationState);
   const [totalItems, setTotalItems] = useState<number>(0);
-  const { loading, data, error, run } = useBrands({ findAllPagination: tablePagination });
+  const { loading, data, error, run } = useAttributes({ attributeGroupUid, findAllPagination: tablePagination });
+  const [openModal, setOpenModal] = useState<boolean>(false);
 
   useImperativeHandle(ref, () => ({
     reload: run,
@@ -31,7 +38,7 @@ const BrandsDataTable = forwardRef<BrandsTableRef, BrandsDataTableProps>((props,
 
   const handleDelete = useCallback(
     async (uid: string) => {
-      const key = `deleteBrand${uid}`;
+      const key = `deleteAttribute${uid}`;
       getMessageApi().open({
         key,
         type: "loading",
@@ -39,7 +46,7 @@ const BrandsDataTable = forwardRef<BrandsTableRef, BrandsDataTableProps>((props,
       });
 
       try {
-        await BrandApi.DeleteByUid(uid);
+        await ApiClient.DeleteByUid(uid);
         getMessageApi().open({
           key,
           type: "success",
@@ -60,7 +67,7 @@ const BrandsDataTable = forwardRef<BrandsTableRef, BrandsDataTableProps>((props,
     [run]
   );
 
-  const columns: TableColumnsType<BrandDto> = useMemo(
+  const columns: TableColumnsType<Dto> = useMemo(
     () => [
       {
         title: "uid",
@@ -70,14 +77,6 @@ const BrandsDataTable = forwardRef<BrandsTableRef, BrandsDataTableProps>((props,
         title: "name",
         dataIndex: "name",
         sorter: true,
-        render: (_: unknown, { uid, name }: BrandDto) => <Link href={`/${urlPrefix}/${uid}`}>{name}</Link>,
-      },
-      {
-        title: "photo",
-        dataIndex: "photoUrl",
-        render: (photoUrl: string) => {
-          return <SmallImage src={photoUrl} />;
-        },
       },
       {
         title: "create at",
@@ -86,17 +85,20 @@ const BrandsDataTable = forwardRef<BrandsTableRef, BrandsDataTableProps>((props,
       },
       {
         title: "",
-        render: ({ uid }: BrandDto) => (
-          <Popconfirm title="xóa?" onConfirm={() => handleDelete(uid)}>
-            <DeleteButton />
-          </Popconfirm>
+        render: ({ uid }: Dto) => (
+          <Flex gap={10} wrap>
+            <Popconfirm title="xóa?" onConfirm={() => handleDelete(uid)}>
+              <DeleteButton />
+            </Popconfirm>
+            <EditButton onClick={() => onEdit(uid)} />
+          </Flex>
         ),
       },
     ],
     [handleDelete]
   );
 
-  const handleChange = (pagination: TablePaginationConfig, filter: any, sorter: SorterResult<BrandDto> | SorterResult<BrandDto>[]) => {
+  const handleChange = (pagination: TablePaginationConfig, filter: any, sorter: SorterResult<Dto> | SorterResult<Dto>[]) => {
     const payload: TablePaginationState = {
       currentPage: pagination.current!,
       itemsPerPage: pagination.pageSize!,
@@ -104,7 +106,7 @@ const BrandsDataTable = forwardRef<BrandsTableRef, BrandsDataTableProps>((props,
       orderDirection: tablePagination.orderDirection,
     };
     if (sorter) {
-      sorter = sorter as SorterResult<BrandDto>;
+      sorter = sorter as SorterResult<Dto>;
       if (sorter.column) {
         payload.orderField = sorter.column.dataIndex as string;
       }
@@ -126,21 +128,23 @@ const BrandsDataTable = forwardRef<BrandsTableRef, BrandsDataTableProps>((props,
   }, [tablePagination]);
 
   return (
-    <Table
-      loading={loading}
-      columns={columns}
-      dataSource={data?.data}
-      rowKey={"uid"}
-      onChange={handleChange}
-      pagination={{
-        current: tablePagination.currentPage,
-        defaultPageSize: tablePagination.itemsPerPage,
-        showSizeChanger: true,
-        pageSizeOptions: ["5", "10", "15", "20"],
-        total: totalItems,
-      }}
-    />
+    <>
+      <Table
+        loading={loading}
+        columns={columns}
+        dataSource={data?.data}
+        rowKey={"uid"}
+        onChange={handleChange}
+        pagination={{
+          current: tablePagination.currentPage,
+          defaultPageSize: tablePagination.itemsPerPage,
+          showSizeChanger: true,
+          pageSizeOptions: ["5", "10", "15", "20"],
+          total: totalItems,
+        }}
+      />
+    </>
   );
 });
 
-export default BrandsDataTable;
+export default AttributesDataTable;

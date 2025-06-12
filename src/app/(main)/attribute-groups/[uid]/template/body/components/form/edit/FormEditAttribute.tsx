@@ -1,16 +1,19 @@
-import BrandApi from "@api-client/brand/brand";
+import AttributeApi from "@api-client/attribute/attribute";
 import { Button, Flex, Input, InputRef } from "antd";
 import Text from "antd/es/typography/Text";
 import { debounce } from "lodash";
 import React, { useEffect, useRef, useState } from "react";
 
-interface FormCreateBrandProps {
-  onSubmit: (name: string) => void;
+const ApiClient = AttributeApi;
+
+interface FormEditAttributeProps {
+  uid?: string;
+  onSubmit: (uid: string, name: string) => void;
 }
 
-const FormCreateBrand: React.FC<FormCreateBrandProps> = ({ onSubmit }: FormCreateBrandProps) => {
+const FormEditAttribute: React.FC<FormEditAttributeProps> = ({ uid, onSubmit }: FormEditAttributeProps) => {
   const [checking, setChecking] = useState<boolean>(false);
-  const [error, setError] = useState<string | null>(null);
+  const [nameError, setNameError] = useState<string | null>(null);
   const [name, setName] = useState<string>("");
 
   const inputRef = useRef<InputRef>(null);
@@ -21,9 +24,9 @@ const FormCreateBrand: React.FC<FormCreateBrandProps> = ({ onSubmit }: FormCreat
 
   const checkNameExists = async (name: string) => {
     if (!checking) setChecking(true);
-    const isNameExists = await BrandApi.IsNameExists(name);
-    if (isNameExists) setError("Tên đã tồn tại!");
-    else setError(null);
+    const isNameExists = await ApiClient.IsNameExists(name);
+    if (isNameExists) setNameError("Tên đã tồn tại!");
+    else setNameError(null);
     setChecking(false);
   };
 
@@ -33,7 +36,7 @@ const FormCreateBrand: React.FC<FormCreateBrandProps> = ({ onSubmit }: FormCreat
     const { value } = e.target;
     setName(value);
     if (value.trim() === "") {
-      setError("Tên không được để trống!");
+      setNameError("Tên không được để trống!");
       return;
     }
     debounceCheckName(value);
@@ -41,21 +44,21 @@ const FormCreateBrand: React.FC<FormCreateBrandProps> = ({ onSubmit }: FormCreat
 
   const handleSubmit = () => {
     if (checking) return;
-    if (error) return;
+    if (nameError) return;
     if (name === "") {
-      setError("Tên không được để trống!");
+      setNameError("Tên không được để trống!");
       return;
     }
-    onSubmit(name);
+    onSubmit(uid!, name);
   };
 
   return (
     <Flex vertical gap={10}>
-      <Text>Tên danh mục</Text>
+      <Text>Tên thuộc tính</Text>
       <Input ref={inputRef} onChange={handleChange} value={name} onPressEnter={handleSubmit} />
-      {error && <Text type="danger">{error}</Text>}
+      {nameError && <Text type="danger">{nameError}</Text>}
       <Flex justify="end">
-        <Button loading={checking} type="primary" onClick={handleSubmit} disabled={!!error}>
+        <Button loading={checking} type="primary" onClick={handleSubmit} disabled={!!nameError}>
           Lưu
         </Button>
       </Flex>
@@ -63,4 +66,4 @@ const FormCreateBrand: React.FC<FormCreateBrandProps> = ({ onSubmit }: FormCreat
   );
 };
 
-export default FormCreateBrand;
+export default FormEditAttribute;

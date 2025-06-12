@@ -1,9 +1,9 @@
 import { AttributeGroupDto } from "@dto/attributeGroup/attributeGroup";
 
 export default class AttributeGroupMapper {
-  static map(attributeGroup: AttributeGroupDto): AttributeGroupDto {
+  static map(item: AttributeGroupDto): AttributeGroupDto {
     return {
-      ...attributeGroup,
+      ...item,
     };
   }
 }

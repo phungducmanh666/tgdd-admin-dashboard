@@ -10,7 +10,7 @@ const AttributeGroupPage = async ({ params }: AttributeGroupPageProps) => {
   const { uid } = await params;
   return (
     <Flex vertical gap={20}>
-      <AttributeGroupPageHeader />
+      <AttributeGroupPageHeader uid={uid} />
       <AttributeGroupPageBody uid={uid} />
     </Flex>
   );
