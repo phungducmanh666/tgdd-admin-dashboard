@@ -50,7 +50,13 @@ export default function MainLayout({ children }: MainLayoutProps) {
       {
         key: "5",
         label: "Mặt hàng",
-        onClick: () => router.push("/products"),
+        children: [
+          {
+            key: "5.1",
+            label: "Trạng thái",
+            onClick: () => router.push("/product-status"),
+          },
+        ],
       },
       {
         key: "6",
