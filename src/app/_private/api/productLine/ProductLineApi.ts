@@ -1,6 +1,6 @@
 import { FindAllDto } from "@dto/common/common";
 import { ProductLineDto } from "@dto/productLine/ProductLineDto";
-import ProductLineMapper from "@helper/mapper/productLine/ProductLineMapper";
+import ProductLineMapper from "@dto/productLine/ProductLineMapper";
 import { ApiFailedResponse, ApiSuccessResponse } from "@helper/server/api/response/ApiResponse";
 import { FindAllPaginationProps } from "../../data/props/ApiProps";
 import ApiClient from "../api-client";

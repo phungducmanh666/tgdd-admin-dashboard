@@ -1,6 +1,6 @@
 import { BrandDto } from "@dto/brand/BrandDto";
+import BrandMapper from "@dto/brand/BrandMapper";
 import { FindAllDto } from "@dto/common/common";
-import BrandMapper from "@helper/mapper/brand/BrandMapper";
 import { ApiFailedResponse, ApiSuccessResponse } from "@helper/server/api/response/ApiResponse";
 import { FindAllPaginationProps } from "../../data/props/ApiProps";
 import ApiClient from "../api-client";

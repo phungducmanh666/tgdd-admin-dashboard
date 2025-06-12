@@ -1,5 +1,5 @@
 import { BrandDto } from "@dto/brand/BrandDto";
-import PhotoUrlMapper from "../photoUrl/PhotoUrlMapper";
+import PhotoUrlMapper from "../../../../helper/mapper/photoUrl/PhotoUrlMapper";
 
 export default class BrandMapper {
   static map(item: BrandDto): BrandDto {

@@ -1,6 +1,6 @@
 import { AttributeGroupDto } from "@dto/attributeGroup/AttributeGroupDto";
+import AttributeGroupMapper from "@dto/attributeGroup/AttributeGroupMapper";
 import { FindAllDto } from "@dto/common/common";
-import AttributeGroupMapper from "@helper/mapper/attributeGroup/AttributeGroupMapper";
 import { ApiFailedResponse, ApiSuccessResponse } from "@helper/server/api/response/ApiResponse";
 import { FindAllPaginationProps } from "../../data/props/ApiProps";
 import ApiClient from "../api-client";

@@ -1,6 +1,6 @@
 import { CategoryDto } from "@dto/category/CategoryDto";
+import CategoryMapper from "@dto/category/CategoryMapper";
 import { FindAllDto } from "@dto/common/common";
-import CategoryMapper from "@helper/mapper/category/CategoryMapper";
 import { ApiFailedResponse, ApiSuccessResponse } from "@helper/server/api/response/ApiResponse";
 import { FindAllPaginationProps } from "../../data/props/ApiProps";
 import ApiClient from "../api-client";

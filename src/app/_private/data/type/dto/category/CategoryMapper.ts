@@ -1,5 +1,5 @@
 import { CategoryDto } from "@dto/category/CategoryDto";
-import PhotoUrlMapper from "../photoUrl/PhotoUrlMapper";
+import PhotoUrlMapper from "../../../../helper/mapper/photoUrl/PhotoUrlMapper";
 
 export default class CategoryMapper {
   static map(item: CategoryDto): CategoryDto {

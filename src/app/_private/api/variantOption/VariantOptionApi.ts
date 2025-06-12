@@ -1,6 +1,6 @@
 import { FindAllDto } from "@dto/common/common";
 import { VariantOptionDto } from "@dto/variantOption/VariantOptionDto";
-import VariantOptionMapper from "@helper/mapper/variantOption/VariantOptionMapper";
+import VariantOptionMapper from "@dto/variantOption/VariantOptionMapper";
 import { ApiFailedResponse, ApiSuccessResponse } from "@helper/server/api/response/ApiResponse";
 import { FindAllPaginationProps } from "../../data/props/ApiProps";
 import ApiClient from "../api-client";
