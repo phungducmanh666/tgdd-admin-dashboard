@@ -1,11 +1,11 @@
 "use client";
 
-import CategryApi from "@api-client/category/category";
+import CategryApi from "@api-client/category/CategoryApi";
 import useCategories from "@api-client/category/hooks/useCategories/useCategories";
 import DeleteButton from "@comp/button/delete/DeleteButton";
 import SmallImage from "@comp/image/small/SmallImage";
 import { getMessageApi } from "@context/message/MessageContext";
-import { CategoryDto } from "@dto/category/category";
+import { CategoryDto } from "@dto/category/CategoryDto";
 import { initialTablePaginationState, tablePaginationReducer, TablePaginationState } from "@reducer/tablePagination/TablePaginationReducer";
 import { Popconfirm, Table, TableColumnsType, TablePaginationConfig } from "antd";
 import { SorterResult } from "antd/es/table/interface";

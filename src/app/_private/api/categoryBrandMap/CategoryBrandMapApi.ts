@@ -1,10 +1,12 @@
-import { BrandDto } from "@dto/brand/brand";
-import { CategoryBrandMapDto } from "@dto/categoryBrandMap/categoryBrandMap";
+import { BrandDto } from "@dto/brand/BrandDto";
 import { FindAllDto } from "@dto/common/common";
-import CategoryMapper from "@helper/mapper/category/CategoryMapper";
+import BrandMapper from "@helper/mapper/brand/BrandMapper";
 import { ApiFailedResponse, ApiSuccessResponse } from "@helper/server/api/response/ApiResponse";
 import { FindAllPaginationProps } from "../../data/props/ApiProps";
 import ApiClient from "../api-client";
+
+interface Dto extends BrandDto {}
+const Mapper = BrandMapper;
 
 export default class CategoryBrandMapApi {
   static GenerateLinkFindAll(categoryUid: string, isBelong: boolean, findAllParams?: FindAllPaginationProps): string {
@@ -24,7 +26,7 @@ export default class CategoryBrandMapApi {
     return ApiClient.GetUrl(`/categories/${categoryUid}/brands/${brandUid}`);
   }
 
-  static async Insert(categoryUid: string, brandUid: string): Promise<CategoryBrandMapDto> {
+  static async Insert(categoryUid: string, brandUid: string): Promise<Dto> {
     const categoryBrandMap = {
       categoryUid,
       brandUid,
@@ -37,7 +39,7 @@ export default class CategoryBrandMapApi {
       body: JSON.stringify(categoryBrandMap),
     });
     if (response.ok) {
-      const data = (await response.json()) as ApiSuccessResponse<CategoryBrandMapDto>;
+      const data = (await response.json()) as ApiSuccessResponse<Dto>;
       return data.metadata!;
     } else {
       const { error } = (await response.json()) as ApiFailedResponse;
@@ -50,7 +52,7 @@ export default class CategoryBrandMapApi {
     if (response.ok) {
       const { metadata } = (await response.json()) as ApiSuccessResponse<FindAllDto<BrandDto>>;
       const { data, pagination } = metadata!;
-      const dataMapped = data.map((item) => CategoryMapper.map(item));
+      const dataMapped = data.map((item) => Mapper.map(item));
       return { data: dataMapped, pagination };
     } else {
       const { error } = (await response.json()) as ApiFailedResponse;

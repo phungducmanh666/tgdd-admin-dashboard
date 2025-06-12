@@ -1,4 +1,4 @@
-import { CategoryDto } from "@dto/category/category";
+import { CategoryDto } from "@dto/category/CategoryDto";
 import { FindAllDto } from "@dto/common/common";
 import { delay } from "@helper/delay/delay";
 import ApiResponse from "@helper/server/api/response/ApiResponse";

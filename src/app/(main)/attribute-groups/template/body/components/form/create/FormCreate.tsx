@@ -1,4 +1,4 @@
-import AttributeGroupApi from "@api-client/attributeGroup/attributeGroup";
+import AttributeGroupApi from "@api-client/attributeGroup/AttributeGroupApi";
 import CategoriesSelect from "@comp/select/category/CategoriesSelect";
 import { Button, Flex, Input, InputRef } from "antd";
 import Text from "antd/es/typography/Text";

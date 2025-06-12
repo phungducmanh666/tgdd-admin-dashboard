@@ -1,13 +1,17 @@
 "use client";
 
-import BrandApi from "@api-client/brand/brand";
+import BrandApi from "@api-client/brand/BrandApi";
 import AddButton from "@comp/button/add/AddButton";
 import RefreshButton from "@comp/button/refresh/RefreshButton";
 import { getMessageApi } from "@context/message/MessageContext";
+import { BrandDto } from "@dto/brand/BrandDto";
 import { Flex, Modal } from "antd";
 import React, { useRef, useState } from "react";
 import FormCreateBrand from "./components/form/create/FormCreateBrand";
 import BrandsDataTable, { BrandsTableRef } from "./components/table/BrandsDataTable";
+
+const ApiClient = BrandApi;
+interface Dto extends BrandDto {}
 
 interface BrandsPageBodyProps {}
 
@@ -26,11 +30,11 @@ const BrandsPageBody: React.FC<BrandsPageBodyProps> = ({}) => {
     });
 
     try {
-      await BrandApi.Insert(name);
+      await ApiClient.Insert(name);
       getMessageApi().open({
         key,
         type: "success",
-        content: "Tạo danh mục thành công!",
+        content: "Tạo thành công!",
         duration: 2,
       });
       dataTableRef.current?.reload();
@@ -38,7 +42,7 @@ const BrandsPageBody: React.FC<BrandsPageBodyProps> = ({}) => {
       getMessageApi().open({
         key,
         type: "error",
-        content: "Tạo danh mục thất bại!",
+        content: "Tạo thất bại!",
         duration: 2,
       });
     }

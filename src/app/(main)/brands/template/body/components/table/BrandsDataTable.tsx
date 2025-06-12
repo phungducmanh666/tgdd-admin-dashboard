@@ -1,16 +1,19 @@
 "use client";
 
-import BrandApi from "@api-client/brand/brand";
+import BrandApi from "@api-client/brand/BrandApi";
 import useBrands from "@api-client/brand/hooks/useBrands/useBrands";
 import DeleteButton from "@comp/button/delete/DeleteButton";
 import SmallImage from "@comp/image/small/SmallImage";
 import { getMessageApi } from "@context/message/MessageContext";
-import { BrandDto } from "@dto/brand/brand";
+import { BrandDto } from "@dto/brand/BrandDto";
 import { initialTablePaginationState, tablePaginationReducer, TablePaginationState } from "@reducer/tablePagination/TablePaginationReducer";
 import { Popconfirm, Table, TableColumnsType, TablePaginationConfig } from "antd";
 import { SorterResult } from "antd/es/table/interface";
 import Link from "next/link";
 import { forwardRef, useCallback, useEffect, useImperativeHandle, useMemo, useReducer, useState } from "react";
+
+const ApiClient = BrandApi;
+interface Dto extends BrandDto {}
 
 interface BrandsDataTableProps {}
 
@@ -39,7 +42,7 @@ const BrandsDataTable = forwardRef<BrandsTableRef, BrandsDataTableProps>((props,
       });
 
       try {
-        await BrandApi.DeleteByUid(uid);
+        await ApiClient.DeleteByUid(uid);
         getMessageApi().open({
           key,
           type: "success",
@@ -60,7 +63,7 @@ const BrandsDataTable = forwardRef<BrandsTableRef, BrandsDataTableProps>((props,
     [run]
   );
 
-  const columns: TableColumnsType<BrandDto> = useMemo(
+  const columns: TableColumnsType<Dto> = useMemo(
     () => [
       {
         title: "uid",
@@ -70,7 +73,7 @@ const BrandsDataTable = forwardRef<BrandsTableRef, BrandsDataTableProps>((props,
         title: "name",
         dataIndex: "name",
         sorter: true,
-        render: (_: unknown, { uid, name }: BrandDto) => <Link href={`/${urlPrefix}/${uid}`}>{name}</Link>,
+        render: (_: unknown, { uid, name }: Dto) => <Link href={`/${urlPrefix}/${uid}`}>{name}</Link>,
       },
       {
         title: "photo",
@@ -86,7 +89,7 @@ const BrandsDataTable = forwardRef<BrandsTableRef, BrandsDataTableProps>((props,
       },
       {
         title: "",
-        render: ({ uid }: BrandDto) => (
+        render: ({ uid }: Dto) => (
           <Popconfirm title="xóa?" onConfirm={() => handleDelete(uid)}>
             <DeleteButton />
           </Popconfirm>
@@ -96,7 +99,7 @@ const BrandsDataTable = forwardRef<BrandsTableRef, BrandsDataTableProps>((props,
     [handleDelete]
   );
 
-  const handleChange = (pagination: TablePaginationConfig, filter: any, sorter: SorterResult<BrandDto> | SorterResult<BrandDto>[]) => {
+  const handleChange = (pagination: TablePaginationConfig, filter: any, sorter: SorterResult<Dto> | SorterResult<Dto>[]) => {
     const payload: TablePaginationState = {
       currentPage: pagination.current!,
       itemsPerPage: pagination.pageSize!,
@@ -104,7 +107,7 @@ const BrandsDataTable = forwardRef<BrandsTableRef, BrandsDataTableProps>((props,
       orderDirection: tablePagination.orderDirection,
     };
     if (sorter) {
-      sorter = sorter as SorterResult<BrandDto>;
+      sorter = sorter as SorterResult<Dto>;
       if (sorter.column) {
         payload.orderField = sorter.column.dataIndex as string;
       }

@@ -1,6 +1,6 @@
 "use client";
 
-import CategryApi from "@api-client/category/category";
+import CategryApi from "@api-client/category/CategoryApi";
 import AddButton from "@comp/button/add/AddButton";
 import RefreshButton from "@comp/button/refresh/RefreshButton";
 import { getMessageApi } from "@context/message/MessageContext";

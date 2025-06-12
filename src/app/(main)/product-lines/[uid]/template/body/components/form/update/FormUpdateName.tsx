@@ -1,4 +1,4 @@
-import CategryApi from "@api-client/category/category";
+import CategryApi from "@api-client/category/CategoryApi";
 import { Button, Flex, Input, InputRef } from "antd";
 import Text from "antd/es/typography/Text";
 import { debounce } from "lodash";

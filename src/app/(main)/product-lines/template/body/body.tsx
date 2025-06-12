@@ -1,6 +1,6 @@
 "use client";
 
-import ProductLineApi from "@api-client/productLine/productLine";
+import ProductLineApi from "@api-client/productLine/ProductLineApi";
 import AddButton from "@comp/button/add/AddButton";
 import RefreshButton from "@comp/button/refresh/RefreshButton";
 import { getMessageApi } from "@context/message/MessageContext";

@@ -1,32 +1,35 @@
 import SmallImage from "@comp/image/small/SmallImage";
-import { CategoryDto } from "@dto/category/category";
+import { BrandDto } from "@dto/brand/BrandDto";
 import { Descriptions, DescriptionsProps } from "antd";
 import React from "react";
 
+interface Dto extends BrandDto {}
+
 interface BrandDescriptionProps {
-  category: CategoryDto;
+  item: Dto;
 }
 
-const BrandDescription: React.FC<BrandDescriptionProps> = ({ category }: BrandDescriptionProps) => {
+const BrandDescription: React.FC<BrandDescriptionProps> = ({ item }: BrandDescriptionProps) => {
   const descriptionItems: DescriptionsProps["items"] = [
     {
       key: "1",
       label: "Uid",
-      children: <p>{category?.uid}</p>,
+      children: <p>{item?.uid}</p>,
     },
     {
       key: "2",
       label: "Tên danh mục",
-      children: <p>{category?.name}</p>,
-    }, {
+      children: <p>{item?.name}</p>,
+    },
+    {
       key: "3",
       label: "Ngày tạo",
-      children: <p>{String(category?.createAt)}</p>,
+      children: <p>{String(item?.createAt)}</p>,
     },
     {
       key: "4",
       label: "Hình ảnh",
-      children: <SmallImage src={category?.photoUrl} />,
+      children: <SmallImage src={item?.photoUrl} />,
     },
   ];
 

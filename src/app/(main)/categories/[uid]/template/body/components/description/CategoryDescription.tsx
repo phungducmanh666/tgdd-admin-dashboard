@@ -1,5 +1,5 @@
 import SmallImage from "@comp/image/small/SmallImage";
-import { CategoryDto } from "@dto/category/category";
+import { CategoryDto } from "@dto/category/CategoryDto";
 import { Descriptions, DescriptionsProps } from "antd";
 import React from "react";
 

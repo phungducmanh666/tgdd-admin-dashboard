@@ -1,15 +1,15 @@
 "use client";
 
-import BrandApi from "@api-client/brand/brand";
+import BrandApi from "@api-client/brand/BrandApi";
 import useBrand from "@api-client/brand/hooks/useBrand/useBrand";
-import CategryApi from "@api-client/category/category";
+import CategryApi from "@api-client/category/CategoryApi";
 import FileButton from "@comp/button/file/FileButton";
 import LoadingPage from "@comp/loading/Loading";
 import { getMessageApi } from "@context/message/MessageContext";
 import { Button, Flex, Modal } from "antd";
 import React, { useState } from "react";
 import BrandDescription from "./components/description/BrandDescription";
-import FormUpdateName from "./components/form/update/FormUpdateName";
+import FormUpdateBrandName from "./components/form/update/FormUpdateBrandName";
 
 interface BrandPageBodyProps {
   uid: string;
@@ -83,14 +83,14 @@ const BrandPageBody: React.FC<BrandPageBodyProps> = ({ uid }: BrandPageBodyProps
   return (
     <>
       <Flex vertical gap={10}>
-        <BrandDescription category={data!} />
+        <BrandDescription item={data!} />
         <Flex gap={10}>
           <Button onClick={() => setOpenModal(true)}>Sửa tên</Button>
           <FileButton onSelectFile={handleUpdatePhoto}>Tải hình ảnh</FileButton>
         </Flex>
       </Flex>{" "}
       <Modal destroyOnHidden open={openModal} onCancel={() => setOpenModal(false)} footer={null}>
-        <FormUpdateName onSubmit={handleUpdateName} />
+        <FormUpdateBrandName onSubmit={handleUpdateName} />
       </Modal>
     </>
   );

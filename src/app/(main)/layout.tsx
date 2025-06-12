@@ -37,6 +37,17 @@ export default function MainLayout({ children }: MainLayoutProps) {
         onClick: () => router.push("/attribute-groups"),
       },
       {
+        key: "4.2",
+        label: "Biến thể",
+        children: [
+          {
+            key: "4.2.1",
+            label: "Thuộc tính biến thể",
+            onClick: () => router.push("/variant-attributes"),
+          },
+        ],
+      },
+      {
         key: "5",
         label: "Mặt hàng",
         onClick: () => router.push("/products"),
@@ -50,32 +61,6 @@ export default function MainLayout({ children }: MainLayoutProps) {
         key: "7",
         label: "Đơn hàng",
         onClick: () => router.push("/orders"),
-      },
-      {
-        key: "8",
-        label: "Users",
-        onClick: () => router.push("/users"),
-      },
-      {
-        key: "9",
-        label: "Tài khoản",
-        children: [
-          {
-            key: "9.1",
-            label: "Tài khoản",
-            onClick: () => router.push("/accounts"),
-          },
-          {
-            key: "9.2",
-            label: "Roles",
-            onClick: () => router.push("/roles"),
-          },
-          {
-            key: "9.3",
-            label: "Permissons",
-            onClick: () => router.push("/permissions"),
-          },
-        ],
       },
     ],
     []

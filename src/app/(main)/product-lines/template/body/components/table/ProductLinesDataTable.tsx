@@ -1,10 +1,10 @@
 "use client";
 
 import useProductLines from "@api-client/productLine/hooks/useProductLines/useProductLines";
-import ProductLineApi from "@api-client/productLine/productLine";
+import ProductLineApi from "@api-client/productLine/ProductLineApi";
 import DeleteButton from "@comp/button/delete/DeleteButton";
 import { getMessageApi } from "@context/message/MessageContext";
-import { ProductLineDto } from "@dto/productLine/productLine";
+import { ProductLineDto } from "@dto/productLine/ProductLineDto";
 import { initialTablePaginationState, tablePaginationReducer, TablePaginationState } from "@reducer/tablePagination/TablePaginationReducer";
 import { Flex, Popconfirm, Table, TableColumnsType, TablePaginationConfig } from "antd";
 import { SorterResult } from "antd/es/table/interface";

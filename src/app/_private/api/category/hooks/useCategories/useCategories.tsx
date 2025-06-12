@@ -1,20 +1,23 @@
 import { FindAllPaginationProps } from "@/app/_private/data/props/ApiProps";
 import useAsyncFunctionWrapper from "@/app/_private/hooks/useAsyncFunctionWrapper/useAsyncFunctionWrapper";
-import { CategoryDto } from "@dto/category/category";
+import CategoryApi from "@api-client/category/CategoryApi";
+import { CategoryDto } from "@dto/category/CategoryDto";
 import { FindAllDto } from "@dto/common/common";
 import { useCallback } from "react";
-import CategryApi from "../../category";
 
-export interface useCategoriesProps {
+export interface HooksProps {
   findAllPagination?: FindAllPaginationProps;
 }
 
-export default function useCategories({ findAllPagination }: useCategoriesProps) {
+const ApiClient = CategoryApi;
+interface Dto extends CategoryDto {}
+
+export default function useCategories({ findAllPagination }: HooksProps) {
   const loadData = useCallback(() => {
-    return CategryApi.FindAll(findAllPagination);
+    return ApiClient.FindAll(findAllPagination);
   }, [{ ...findAllPagination }]);
 
-  return useAsyncFunctionWrapper<FindAllDto<CategoryDto>>({
+  return useAsyncFunctionWrapper<FindAllDto<Dto>>({
     asyncFunction: loadData,
     runNow: true,
   });

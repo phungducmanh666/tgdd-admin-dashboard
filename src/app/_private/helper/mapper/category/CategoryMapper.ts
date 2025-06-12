@@ -1,4 +1,4 @@
-import { CategoryDto } from "@dto/category/category";
+import { CategoryDto } from "@dto/category/CategoryDto";
 import PhotoUrlMapper from "../photoUrl/PhotoUrlMapper";
 
 export default class CategoryMapper {

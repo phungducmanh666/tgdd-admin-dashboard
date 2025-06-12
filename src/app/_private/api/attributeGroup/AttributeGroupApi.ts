@@ -1,9 +1,12 @@
-import { AttributeGroupDto } from "@dto/attributeGroup/attributeGroup";
+import { AttributeGroupDto } from "@dto/attributeGroup/AttributeGroupDto";
 import { FindAllDto } from "@dto/common/common";
 import AttributeGroupMapper from "@helper/mapper/attributeGroup/AttributeGroupMapper";
 import { ApiFailedResponse, ApiSuccessResponse } from "@helper/server/api/response/ApiResponse";
 import { FindAllPaginationProps } from "../../data/props/ApiProps";
 import ApiClient from "../api-client";
+
+interface Dto extends AttributeGroupDto {}
+const Mapper = AttributeGroupMapper;
 
 export default class AttributeGroupApi {
   static UrlPrefix: string = "attribute-groups";
@@ -21,7 +24,7 @@ export default class AttributeGroupApi {
     }
     return ApiClient.GetUrl(`/${AttributeGroupApi.UrlPrefix}?${requestParams.toString()}`);
   }
-  static async Insert(categoryUid: string, name: string): Promise<AttributeGroupDto> {
+  static async Insert(categoryUid: string, name: string): Promise<Dto> {
     const category = {
       categoryUid,
       name,
@@ -34,30 +37,30 @@ export default class AttributeGroupApi {
       body: JSON.stringify(category),
     });
     if (response.ok) {
-      const data = (await response.json()) as ApiSuccessResponse<AttributeGroupDto>;
+      const data = (await response.json()) as ApiSuccessResponse<Dto>;
       return data.metadata!;
     } else {
       const { error } = (await response.json()) as ApiFailedResponse;
       throw Error(error.message);
     }
   }
-  static async FindByUid(uid: string): Promise<AttributeGroupDto> {
+  static async FindByUid(uid: string): Promise<Dto> {
     const response = await fetch(ApiClient.GetUrl(`/${AttributeGroupApi.UrlPrefix}/${uid}`));
     if (response.ok) {
-      const data = (await response.json()) as ApiSuccessResponse<AttributeGroupDto>;
-      const category = AttributeGroupMapper.map(data.metadata!);
+      const data = (await response.json()) as ApiSuccessResponse<Dto>;
+      const category = Mapper.map(data.metadata!);
       return category;
     } else {
       const { error } = (await response.json()) as ApiFailedResponse;
       throw Error(error.message);
     }
   }
-  static async FindAll(categoryUid?: string, findAllPaginationParams?: FindAllPaginationProps): Promise<FindAllDto<AttributeGroupDto>> {
+  static async FindAll(categoryUid?: string, findAllPaginationParams?: FindAllPaginationProps): Promise<FindAllDto<Dto>> {
     const response = await fetch(AttributeGroupApi.GenerateLinkFindAll(categoryUid, findAllPaginationParams));
     if (response.ok) {
-      const { metadata } = (await response.json()) as ApiSuccessResponse<FindAllDto<AttributeGroupDto>>;
+      const { metadata } = (await response.json()) as ApiSuccessResponse<FindAllDto<Dto>>;
       const { data, pagination } = metadata!;
-      const dataMapped = data.map((item) => AttributeGroupMapper.map(item));
+      const dataMapped = data.map((item) => Mapper.map(item));
       return { data: dataMapped, pagination };
     } else {
       const { error } = (await response.json()) as ApiFailedResponse;

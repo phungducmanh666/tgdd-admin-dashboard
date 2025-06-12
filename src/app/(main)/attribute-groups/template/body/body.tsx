@@ -1,6 +1,6 @@
 "use client";
 
-import AttributeGroupApi from "@api-client/attributeGroup/attributeGroup";
+import AttributeGroupApi from "@api-client/attributeGroup/AttributeGroupApi";
 import AddButton from "@comp/button/add/AddButton";
 import RefreshButton from "@comp/button/refresh/RefreshButton";
 import CategoriesSelect from "@comp/select/category/CategoriesSelect";

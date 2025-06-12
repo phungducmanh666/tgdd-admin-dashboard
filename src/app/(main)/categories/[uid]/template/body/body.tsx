@@ -1,7 +1,7 @@
 "use client";
 
-import CategryApi from "@api-client/category/category";
-import useCategory from "@api-client/category/hooks/useCategories/useCategory";
+import CategryApi from "@api-client/category/CategoryApi";
+import useCategory from "@api-client/category/hooks/useCategory/useCategory";
 import FileButton from "@comp/button/file/FileButton";
 import LoadingPage from "@comp/loading/Loading";
 import { getMessageApi } from "@context/message/MessageContext";

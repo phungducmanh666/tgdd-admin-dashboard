@@ -1,4 +1,4 @@
-import ProductLineApi from "@api-client/productLine/productLine";
+import ProductLineApi from "@api-client/productLine/ProductLineApi";
 import { Button, Flex, Input, InputRef } from "antd";
 import Text from "antd/es/typography/Text";
 import { debounce } from "lodash";

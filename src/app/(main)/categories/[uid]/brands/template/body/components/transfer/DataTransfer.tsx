@@ -1,10 +1,10 @@
 "use client";
 
-import CategoryBrandMapApi from "@api-client/categoryBrandMap/categoryBrandMap";
+import CategoryBrandMapApi from "@api-client/categoryBrandMap/CategoryBrandMapApi";
 import useCategoryBrands from "@api-client/categoryBrandMap/hooks/useCategoryBrands";
 import SmallImage from "@comp/image/small/SmallImage";
 import { getMessageApi } from "@context/message/MessageContext";
-import { BrandDto } from "@dto/brand/brand";
+import { BrandDto } from "@dto/brand/BrandDto";
 import { initialTablePaginationState, tablePaginationReducer, TablePaginationState } from "@reducer/tablePagination/TablePaginationReducer";
 import { Button, Col, Row, Table, TableColumnsType, TablePaginationConfig } from "antd";
 import { SorterResult } from "antd/es/table/interface";

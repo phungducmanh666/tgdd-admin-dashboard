@@ -1,8 +1,12 @@
-import BrandApi from "@api-client/brand/brand";
+import BrandApi from "@api-client/brand/BrandApi";
+import { BrandDto } from "@dto/brand/BrandDto";
 import { Button, Flex, Input, InputRef } from "antd";
 import Text from "antd/es/typography/Text";
 import { debounce } from "lodash";
 import React, { useEffect, useRef, useState } from "react";
+
+const ApiClient = BrandApi;
+interface Dto extends BrandDto {}
 
 interface FormCreateBrandProps {
   onSubmit: (name: string) => void;
@@ -21,7 +25,7 @@ const FormCreateBrand: React.FC<FormCreateBrandProps> = ({ onSubmit }: FormCreat
 
   const checkNameExists = async (name: string) => {
     if (!checking) setChecking(true);
-    const isNameExists = await BrandApi.IsNameExists(name);
+    const isNameExists = await ApiClient.IsNameExists(name);
     if (isNameExists) setError("Tên đã tồn tại!");
     else setError(null);
     setChecking(false);

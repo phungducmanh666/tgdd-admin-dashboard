@@ -1,14 +1,18 @@
-import CategryApi from "@api-client/category/category";
+import BrandApi from "@api-client/brand/BrandApi";
+import { BrandDto } from "@dto/brand/BrandDto";
 import { Button, Flex, Input, InputRef } from "antd";
 import Text from "antd/es/typography/Text";
 import { debounce } from "lodash";
 import React, { useEffect, useRef, useState } from "react";
 
-interface FormUpdateNameProps {
+const ApiClient = BrandApi;
+interface Dto extends BrandDto {}
+
+interface FormUpdateBrandNameProps {
   onSubmit: (name: string) => void;
 }
 
-const FormUpdateName: React.FC<FormUpdateNameProps> = ({ onSubmit }: FormUpdateNameProps) => {
+const FormUpdateBrandName: React.FC<FormUpdateBrandNameProps> = ({ onSubmit }: FormUpdateBrandNameProps) => {
   const [checking, setChecking] = useState<boolean>(false);
   const [error, setError] = useState<string | null>(null);
   const [name, setName] = useState<string>("");
@@ -21,7 +25,7 @@ const FormUpdateName: React.FC<FormUpdateNameProps> = ({ onSubmit }: FormUpdateN
 
   const checkNameExists = async (name: string) => {
     if (!checking) setChecking(true);
-    const isNameExists = await CategryApi.IsNameExists(name);
+    const isNameExists = await ApiClient.IsNameExists(name);
     if (isNameExists) setError("Tên đã tồn tại!");
     else setError(null);
     setChecking(false);
@@ -51,7 +55,7 @@ const FormUpdateName: React.FC<FormUpdateNameProps> = ({ onSubmit }: FormUpdateN
 
   return (
     <Flex vertical gap={10}>
-      <Text>Tên danh mục</Text>
+      <Text>Tên thương hiệu</Text>
       <Input ref={inputRef} onChange={handleChange} value={name} onPressEnter={handleSubmit} />
       {error && <Text type="danger">{error}</Text>}
       <Flex justify="end">
@@ -63,4 +67,4 @@ const FormUpdateName: React.FC<FormUpdateNameProps> = ({ onSubmit }: FormUpdateN
   );
 };
 
-export default FormUpdateName;
+export default FormUpdateBrandName;

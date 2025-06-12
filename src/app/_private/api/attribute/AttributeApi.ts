@@ -1,14 +1,20 @@
-import { BrandDto } from "@dto/brand/brand";
+import { AttributeDto } from "@dto/attribute/AttributeDto";
 import { FindAllDto } from "@dto/common/common";
-import CategoryMapper from "@helper/mapper/category/CategoryMapper";
+import AttributeMapper from "@helper/mapper/attribute/AttributeMapper";
 import { ApiFailedResponse, ApiSuccessResponse } from "@helper/server/api/response/ApiResponse";
 import { FindAllPaginationProps } from "../../data/props/ApiProps";
 import ApiClient from "../api-client";
 
-export default class BrandApi {
-  static UrlPrefix: string = "brands";
-  static GenerateLinkFindAll(findAllParams?: FindAllPaginationProps): string {
+interface Dto extends AttributeDto {}
+const Mapper = AttributeMapper;
+
+export default class AttributeApi {
+  static UrlPrefix: string = "attributes";
+  static GenerateLinkFindAll(attributeGroupUid?: string, findAllParams?: FindAllPaginationProps): string {
     const requestParams = new URLSearchParams({});
+    if (attributeGroupUid) {
+      requestParams.append("attributeGroupUid", attributeGroupUid);
+    }
     if (findAllParams) {
       const { currentPage, itemsPerPage, orderField, orderDirection } = findAllParams;
       requestParams.append("currentPage", String(currentPage));
@@ -16,44 +22,45 @@ export default class BrandApi {
       requestParams.append("orderField", String(orderField));
       requestParams.append("orderDirection", String(orderDirection));
     }
-    return ApiClient.GetUrl(`/${BrandApi.UrlPrefix}?${requestParams.toString()}`);
+    return ApiClient.GetUrl(`/${AttributeApi.UrlPrefix}?${requestParams.toString()}`);
   }
-  static async Insert(name: string): Promise<BrandDto> {
-    const category = {
+  static async Insert(attributeGroupUid: string, name: string): Promise<Dto> {
+    const attribute = {
+      attributeGroupUid,
       name,
     };
-    const response = await fetch(ApiClient.GetUrl(`/${BrandApi.UrlPrefix}`), {
+    const response = await fetch(ApiClient.GetUrl(`/${AttributeApi.UrlPrefix}`), {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
       },
-      body: JSON.stringify(category),
+      body: JSON.stringify(attribute),
     });
     if (response.ok) {
-      const data = (await response.json()) as ApiSuccessResponse<BrandDto>;
+      const data = (await response.json()) as ApiSuccessResponse<Dto>;
       return data.metadata!;
     } else {
       const { error } = (await response.json()) as ApiFailedResponse;
       throw Error(error.message);
     }
   }
-  static async FindByUid(uid: string): Promise<BrandDto> {
-    const response = await fetch(ApiClient.GetUrl(`/${BrandApi.UrlPrefix}/${uid}`));
+  static async FindByUid(uid: string): Promise<Dto> {
+    const response = await fetch(ApiClient.GetUrl(`/${AttributeApi.UrlPrefix}/${uid}`));
     if (response.ok) {
-      const data = (await response.json()) as ApiSuccessResponse<BrandDto>;
-      const category = CategoryMapper.map(data.metadata!);
-      return category;
+      const data = (await response.json()) as ApiSuccessResponse<Dto>;
+      const item = Mapper.map(data.metadata!);
+      return item;
     } else {
       const { error } = (await response.json()) as ApiFailedResponse;
       throw Error(error.message);
     }
   }
-  static async FindAll(findAllPaginationParams?: FindAllPaginationProps): Promise<FindAllDto<BrandDto>> {
-    const response = await fetch(BrandApi.GenerateLinkFindAll(findAllPaginationParams));
+  static async FindAll(attributeGroupUid?: string, findAllPaginationParams?: FindAllPaginationProps): Promise<FindAllDto<Dto>> {
+    const response = await fetch(AttributeApi.GenerateLinkFindAll(attributeGroupUid, findAllPaginationParams));
     if (response.ok) {
-      const { metadata } = (await response.json()) as ApiSuccessResponse<FindAllDto<BrandDto>>;
+      const { metadata } = (await response.json()) as ApiSuccessResponse<FindAllDto<Dto>>;
       const { data, pagination } = metadata!;
-      const dataMapped = data.map((item) => CategoryMapper.map(item));
+      const dataMapped = data.map((item) => Mapper.map(item));
       return { data: dataMapped, pagination };
     } else {
       const { error } = (await response.json()) as ApiFailedResponse;
@@ -61,7 +68,7 @@ export default class BrandApi {
     }
   }
   static async UpdateName(uid: string, name: string): Promise<number> {
-    const response = await fetch(ApiClient.GetUrl(`/${BrandApi.UrlPrefix}/${uid}/name`), {
+    const response = await fetch(ApiClient.GetUrl(`/${AttributeApi.UrlPrefix}/${uid}/name`), {
       method: "PATCH",
       headers: {
         "Content-Type": "application/json",
@@ -76,23 +83,8 @@ export default class BrandApi {
       throw Error(error.message);
     }
   }
-  static async UpdatePhoto(uid: string, photo: File): Promise<number> {
-    const formData = new FormData();
-    formData.append("photo", photo);
-    const response = await fetch(ApiClient.GetUrl(`/${BrandApi.UrlPrefix}/${uid}/photo`), {
-      method: "PATCH",
-      body: formData,
-    });
-    if (response.ok) {
-      const data = (await response.json()) as ApiSuccessResponse<number>;
-      return data.metadata!;
-    } else {
-      const { error } = (await response.json()) as ApiFailedResponse;
-      throw Error(error.message);
-    }
-  }
   static async DeleteByUid(uid: string): Promise<number> {
-    const response = await fetch(ApiClient.GetUrl(`/${BrandApi.UrlPrefix}/${uid}`), {
+    const response = await fetch(ApiClient.GetUrl(`/${AttributeApi.UrlPrefix}/${uid}`), {
       method: "DELETE",
       headers: {
         "Content-Type": "application/json",
@@ -111,7 +103,7 @@ export default class BrandApi {
       name,
     });
 
-    const response = await fetch(ApiClient.GetUrl(`/${BrandApi.UrlPrefix}/exists?${params.toString()}`));
+    const response = await fetch(ApiClient.GetUrl(`/${AttributeApi.UrlPrefix}/exists?${params.toString()}`));
     if (response.ok) {
       const data = (await response.json()) as ApiSuccessResponse<boolean>;
       return data.metadata!;

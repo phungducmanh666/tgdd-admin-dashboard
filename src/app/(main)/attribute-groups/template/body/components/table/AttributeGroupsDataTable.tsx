@@ -1,10 +1,10 @@
 "use client";
 
-import AttributeGroupApi from "@api-client/attributeGroup/attributeGroup";
+import AttributeGroupApi from "@api-client/attributeGroup/AttributeGroupApi";
 import useAttributeGroups from "@api-client/attributeGroup/hooks/useAttributeGroups/useAttributeGroups";
 import DeleteButton from "@comp/button/delete/DeleteButton";
 import { getMessageApi } from "@context/message/MessageContext";
-import { AttributeGroupDto } from "@dto/attributeGroup/attributeGroup";
+import { AttributeGroupDto } from "@dto/attributeGroup/AttributeGroupDto";
 import { initialTablePaginationState, tablePaginationReducer, TablePaginationState } from "@reducer/tablePagination/TablePaginationReducer";
 import { Flex, Popconfirm, Table, TableColumnsType, TablePaginationConfig } from "antd";
 import { SorterResult } from "antd/es/table/interface";

@@ -1,5 +1,5 @@
 import SmallImage from "@comp/image/small/SmallImage";
-import { CategoryDto } from "@dto/category/category";
+import { CategoryDto } from "@dto/category/CategoryDto";
 import { Descriptions, DescriptionsProps } from "antd";
 import React from "react";
 
@@ -18,7 +18,8 @@ const BrandDescription: React.FC<BrandDescriptionProps> = ({ category }: BrandDe
       key: "2",
       label: "Tên danh mục",
       children: <p>{category?.name}</p>,
-    }, {
+    },
+    {
       key: "3",
       label: "Ngày tạo",
       children: <p>{String(category?.createAt)}</p>,

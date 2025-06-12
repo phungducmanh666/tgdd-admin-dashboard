@@ -1,8 +1,8 @@
 "use client";
 
-import BrandApi from "@api-client/brand/brand";
+import BrandApi from "@api-client/brand/BrandApi";
 import useBrand from "@api-client/brand/hooks/useBrand/useBrand";
-import CategryApi from "@api-client/category/category";
+import CategryApi from "@api-client/category/CategoryApi";
 import FileButton from "@comp/button/file/FileButton";
 import LoadingPage from "@comp/loading/Loading";
 import { getMessageApi } from "@context/message/MessageContext";

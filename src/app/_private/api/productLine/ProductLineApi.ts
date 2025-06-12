@@ -1,15 +1,24 @@
-import { CategoryDto } from "@dto/category/category";
 import { FindAllDto } from "@dto/common/common";
-import CategoryMapper from "@helper/mapper/category/CategoryMapper";
+import { ProductLineDto } from "@dto/productLine/ProductLineDto";
+import ProductLineMapper from "@helper/mapper/productLine/ProductLineMapper";
 import { ApiFailedResponse, ApiSuccessResponse } from "@helper/server/api/response/ApiResponse";
 import { FindAllPaginationProps } from "../../data/props/ApiProps";
 import ApiClient from "../api-client";
 
-export default class CategoryApi {
-  static UrlPrefix: string = "categories";
+interface Dto extends ProductLineDto {}
+const Mapper = ProductLineMapper;
 
-  static GenerateLinkFindAll(findAllParams?: FindAllPaginationProps): string {
+export default class ProductLineApi {
+  static UrlPrefix: string = "product-lines";
+
+  static GenerateLinkFindAll(categoryUid: string | undefined, brandUid: string | undefined, findAllParams?: FindAllPaginationProps): string {
     const requestParams = new URLSearchParams({});
+    if (categoryUid) {
+      requestParams.append("categoryUid", String(categoryUid));
+    }
+    if (brandUid) {
+      requestParams.append("brandUid", String(brandUid));
+    }
     if (findAllParams) {
       const { currentPage, itemsPerPage, orderField, orderDirection } = findAllParams;
       requestParams.append("currentPage", String(currentPage));
@@ -17,14 +26,16 @@ export default class CategoryApi {
       requestParams.append("orderField", String(orderField));
       requestParams.append("orderDirection", String(orderDirection));
     }
-    return ApiClient.GetUrl(`/${CategoryApi.UrlPrefix}?${requestParams.toString()}`);
+    return ApiClient.GetUrl(`/${ProductLineApi.UrlPrefix}?${requestParams.toString()}`);
   }
 
-  static async Insert(name: string): Promise<CategoryDto> {
+  static async Insert(categoryUid: string, brandUid: string, name: string): Promise<Dto> {
     const category = {
+      categoryUid,
+      brandUid,
       name,
     };
-    const response = await fetch(ApiClient.GetUrl(`/${CategoryApi.UrlPrefix}`), {
+    const response = await fetch(ApiClient.GetUrl(`/${ProductLineApi.UrlPrefix}`), {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
@@ -32,30 +43,34 @@ export default class CategoryApi {
       body: JSON.stringify(category),
     });
     if (response.ok) {
-      const data = (await response.json()) as ApiSuccessResponse<CategoryDto>;
+      const data = (await response.json()) as ApiSuccessResponse<Dto>;
       return data.metadata!;
     } else {
       const { error } = (await response.json()) as ApiFailedResponse;
       throw Error(error.message);
     }
   }
-  static async FindByUid(uid: string): Promise<CategoryDto> {
-    const response = await fetch(ApiClient.GetUrl(`/${CategoryApi.UrlPrefix}/${uid}`));
+  static async FindByUid(uid: string): Promise<Dto> {
+    const response = await fetch(ApiClient.GetUrl(`/${ProductLineApi.UrlPrefix}/${uid}`));
     if (response.ok) {
-      const data = (await response.json()) as ApiSuccessResponse<CategoryDto>;
-      const category = CategoryMapper.map(data.metadata!);
+      const data = (await response.json()) as ApiSuccessResponse<Dto>;
+      const category = Mapper.map(data.metadata!);
       return category;
     } else {
       const { error } = (await response.json()) as ApiFailedResponse;
       throw Error(error.message);
     }
   }
-  static async FindAll(findAllParams?: FindAllPaginationProps): Promise<FindAllDto<CategoryDto>> {
-    const response = await fetch(CategoryApi.GenerateLinkFindAll(findAllParams));
+  static async FindAll(
+    categoryUid: string | undefined,
+    brandUid: string | undefined,
+    findAllPaginationParams?: FindAllPaginationProps
+  ): Promise<FindAllDto<Dto>> {
+    const response = await fetch(ProductLineApi.GenerateLinkFindAll(categoryUid, brandUid, findAllPaginationParams));
     if (response.ok) {
-      const { metadata } = (await response.json()) as ApiSuccessResponse<FindAllDto<CategoryDto>>;
+      const { metadata } = (await response.json()) as ApiSuccessResponse<FindAllDto<Dto>>;
       const { data, pagination } = metadata!;
-      const dataMapped = data.map((item) => CategoryMapper.map(item));
+      const dataMapped = data.map((item) => Mapper.map(item));
       return { data: dataMapped, pagination };
     } else {
       const { error } = (await response.json()) as ApiFailedResponse;
@@ -63,7 +78,7 @@ export default class CategoryApi {
     }
   }
   static async UpdateName(uid: string, name: string): Promise<number> {
-    const response = await fetch(ApiClient.GetUrl(`/${CategoryApi.UrlPrefix}/${uid}/name`), {
+    const response = await fetch(ApiClient.GetUrl(`/${ProductLineApi.UrlPrefix}/${uid}/name`), {
       method: "PATCH",
       headers: {
         "Content-Type": "application/json",
@@ -78,23 +93,8 @@ export default class CategoryApi {
       throw Error(error.message);
     }
   }
-  static async UpdatePhoto(uid: string, photo: File): Promise<number> {
-    const formData = new FormData();
-    formData.append("photo", photo);
-    const response = await fetch(ApiClient.GetUrl(`/${CategoryApi.UrlPrefix}/${uid}/photo`), {
-      method: "PATCH",
-      body: formData,
-    });
-    if (response.ok) {
-      const data = (await response.json()) as ApiSuccessResponse<number>;
-      return data.metadata!;
-    } else {
-      const { error } = (await response.json()) as ApiFailedResponse;
-      throw Error(error.message);
-    }
-  }
   static async DeleteByUid(uid: string): Promise<number> {
-    const response = await fetch(ApiClient.GetUrl(`/${CategoryApi.UrlPrefix}/${uid}`), {
+    const response = await fetch(ApiClient.GetUrl(`/${ProductLineApi.UrlPrefix}/${uid}`), {
       method: "DELETE",
       headers: {
         "Content-Type": "application/json",
@@ -113,7 +113,7 @@ export default class CategoryApi {
       name,
     });
 
-    const response = await fetch(ApiClient.GetUrl(`/${CategoryApi.UrlPrefix}/exists?${params.toString()}`));
+    const response = await fetch(ApiClient.GetUrl(`/${ProductLineApi.UrlPrefix}/exists?${params.toString()}`));
     if (response.ok) {
       const data = (await response.json()) as ApiSuccessResponse<boolean>;
       return data.metadata!;

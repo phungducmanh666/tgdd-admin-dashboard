@@ -1,4 +1,4 @@
-import AttributeApi from "@api-client/attribute/attribute";
+import AttributeApi from "@api-client/attribute/AttributeApi";
 import { Button, Flex, Input, InputRef } from "antd";
 import Text from "antd/es/typography/Text";
 import { debounce } from "lodash";

@@ -1,4 +1,4 @@
-import { CategoryDto } from "@dto/category/category";
+import { CategoryDto } from "@dto/category/CategoryDto";
 import JsonIO from "@helper/json/JsonIO";
 import path from "path";
 

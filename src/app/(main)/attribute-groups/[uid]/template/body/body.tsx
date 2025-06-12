@@ -1,6 +1,6 @@
 "use client";
 
-import AttributeApi from "@api-client/attribute/attribute";
+import AttributeApi from "@api-client/attribute/AttributeApi";
 import AddButton from "@comp/button/add/AddButton";
 import RefreshButton from "@comp/button/refresh/RefreshButton";
 import { getMessageApi } from "@context/message/MessageContext";
